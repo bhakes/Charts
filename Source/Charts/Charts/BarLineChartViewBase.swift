@@ -776,24 +776,26 @@ open class BarLineChartViewBase: ChartViewBase, BarLineScatterCandleBubbleChartD
         }
         else if recognizer.state == NSUIGestureRecognizerState.ended || recognizer.state == NSUIGestureRecognizerState.cancelled
         {
-            if _isDragging
+          if _isDragging
+          {
+            if recognizer.state == NSUIGestureRecognizerState.ended && isDragDecelerationEnabled
             {
-                if recognizer.state == NSUIGestureRecognizerState.ended && isDragDecelerationEnabled
-                {
-                    stopDeceleration()
-                    
-                    _decelerationLastTime = CACurrentMediaTime()
-                    _decelerationVelocity = recognizer.velocity(in: self)
-                    
-                    _decelerationDisplayLink = NSUIDisplayLink(target: self, selector: #selector(BarLineChartViewBase.decelerationLoop))
-                    _decelerationDisplayLink.add(to: RunLoop.main, forMode: RunLoop.Mode.common)
-                }
-                
-                _isDragging = false
-                
-                delegate?.chartViewDidEndPanning?(self)
+              stopDeceleration()
+              
+              _decelerationLastTime = CACurrentMediaTime()
+              _decelerationVelocity = recognizer.velocity(in: self)
+              
+              _decelerationDisplayLink = NSUIDisplayLink(target: self, selector: #selector(BarLineChartViewBase.decelerationLoop))
+              _decelerationDisplayLink.add(to: RunLoop.main, forMode: RunLoop.Mode.common)
             }
             
+            _isDragging = false
+            
+            delegate?.chartViewDidEndPanning?(self)
+          } else {
+            delegate?.chartViewDidEndPanning?(self)
+          }
+          
             if _outerScrollView !== nil
             {
                 _outerScrollView?.nsuiIsScrollEnabled = true
