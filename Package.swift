@@ -5,8 +5,8 @@ import PackageDescription
 let package = Package(
     name: "Charts",
     platforms: [
-          .iOS(.v9),
-          .tvOS(.v9),
+          .iOS(.v12),
+          .tvOS(.v12),
           .macOS(.v10_11),
     ],
     products: [
